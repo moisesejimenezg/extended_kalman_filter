@@ -7,7 +7,9 @@ add_definitions(-std=c++14)
 set(CXX_FLAGS "-Wall")
 set(CMAKE_CXX_FLAGS "${CXX_FLAGS}")
 
-set(sources src/main.cpp src/tools.cpp src/FusionEKF.cpp src/kalman_filter.cpp src/tools.h src/FusionEKF.h src/kalman_filter.h)
+set(sources  src/tools.cpp src/FusionEKF.cpp src/kalman_filter.cpp src/tools.h src/FusionEKF.h src/kalman_filter.h)
+set(main src/main.cpp)
+set(test_sources test/tools.cpp)
 
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin") 
@@ -21,6 +23,15 @@ link_directories(/usr/local/Cellar/libuv/1*/lib)
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin") 
 
 
-add_executable(ExtendedKF ${sources})
+add_executable(ExtendedKF ${main} ${sources})
 
 target_link_libraries(ExtendedKF z ssl uv uWS)
+
+add_subdirectory(third_party/googletest)
+enable_testing()
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+
+include_directories(src)
+add_executable(Unit ${test_sources} ${sources})
+target_link_libraries(Unit z ssl uv uWS gtest gtest_main)
+add_test(Unit Unit)
