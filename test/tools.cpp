@@ -19,13 +19,7 @@ TEST(Tools, CalculateJacobian)
 
     Eigen::MatrixXd Hj = Tools::CalculateJacobian(x_predicted);
 
-    for (auto i{0u}; i < 3; ++i)
-    {
-        for (auto j{0u}; j < 4; ++j)
-        {
-            EXPECT_NEAR(Hj(i, j), expected(i, j), 0.0001);
-        }
-    }
+    EXPECT_TRUE(expected.isApprox(Hj, 1e-4));
 }
 
 TEST(Tools, CalculateRMSE)
@@ -54,9 +48,22 @@ TEST(Tools, CalculateRMSE)
 
     const auto rmse{Tools::CalculateRMSE(estimations, ground_truth)};
 
-    for (auto i{0u}; i < 4; ++i)
-    {
-        EXPECT_NEAR(expected(i), rmse(i), 0.0001);
-    }
+    EXPECT_TRUE(expected.isApprox(rmse, 1e-4));
+}
+
+TEST(Tools, ToCartesian)
+{
+    const static float pi{std::acos(-1)};
+    const static auto rho{2.f};
+    const static auto theta{pi / 4};
+    const static auto rho_dot{4.f};
+    Eigen::VectorXd polar(3);
+    polar << rho, theta, rho_dot;
+    Eigen::VectorXd expected(4);
+    expected << rho * std::cos(theta), rho * std::sin(theta), rho_dot * std::cos(theta), rho_dot * std::sin(theta);
+
+    const auto cartesian{Tools::ToCartesian(polar)};
+
+    EXPECT_TRUE(expected.isApprox(cartesian, 1e-4));
 }
 }  // namespace

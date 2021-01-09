@@ -1,5 +1,6 @@
 #include "tools.h"
 
+#include <cmath>
 #include <iostream>
 
 using Eigen::MatrixXd;
@@ -7,8 +8,7 @@ using Eigen::VectorXd;
 using std::vector;
 namespace Tools
 {
-VectorXd CalculateRMSE(const vector<VectorXd> &estimations,
-                       const vector<VectorXd> &ground_truth)
+VectorXd CalculateRMSE(const vector<VectorXd> &estimations, const vector<VectorXd> &ground_truth)
 {
     VectorXd rmse(4);
     rmse << 0, 0, 0, 0;
@@ -44,8 +44,7 @@ MatrixXd CalculateJacobian(const VectorXd &x_state)
 
     if (fabs(c1) < 0.0001)
     {
-        std::cout << "CalculateJacobian () - Error - Division by Zero"
-                  << std::endl;
+        std::cout << "CalculateJacobian () - Error - Division by Zero" << std::endl;
         return Hj;
     }
 
@@ -55,5 +54,15 @@ MatrixXd CalculateJacobian(const VectorXd &x_state)
             py * (vx * py - vy * px) / c3, px * (px * vy - py * vx) / c3, px / c2, py / c2;
     // clang-format on
     return Hj;
+}
+
+Eigen::VectorXd ToCartesian(const Eigen::VectorXd &polar)
+{
+    VectorXd cartesian{4};
+    const auto rho{polar[0]};
+    const auto theta{polar[1]};
+    const auto rho_dot{polar[2]};
+    cartesian << std::cos(theta) * rho, std::sin(theta) * rho, std::cos(theta) * rho_dot, std::sin(theta) * rho_dot;
+    return cartesian;
 }
 }  // namespace Tools

@@ -17,6 +17,7 @@ Eigen::VectorXd CalculateRMSE(const std::vector<Eigen::VectorXd> &estimations,
  * A helper method to calculate Jacobians.
  */
 Eigen::MatrixXd CalculateJacobian(const Eigen::VectorXd &x_state);
+Eigen::VectorXd ToCartesian(const Eigen::VectorXd &polar);
 }  // namespace Tools
 
 #endif  // TOOLS_H_
