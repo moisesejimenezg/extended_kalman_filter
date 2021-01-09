@@ -92,12 +92,14 @@ void FusionEKF::Initialize(const MeasurementPackage &measurement_pack)
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER)
     {
-        ekf_.x_ << measurement_pack.raw_measurements_[0], measurement_pack.raw_measurements_[1], 0, 0;
+        ekf_.x_ << measurement_pack.raw_measurements_[0], measurement_pack.raw_measurements_[1], 0,
+            0;
     }
     is_initialized_ = true;
 }
 
-float FusionEKF::CalculateTimeDifferenceAndUpdatePrevious(const MeasurementPackage &measurement_pack)
+float FusionEKF::CalculateTimeDifferenceAndUpdatePrevious(
+    const MeasurementPackage &measurement_pack)
 {
     const static auto millisecond_to_second{1e6};
     const float dt{(previous_timestamp_ - measurement_pack.timestamp_) / millisecond_to_second};

@@ -60,7 +60,8 @@ TEST(Tools, ToCartesian)
     Eigen::VectorXd polar(3);
     polar << rho, theta, rho_dot;
     Eigen::VectorXd expected(4);
-    expected << rho * std::cos(theta), rho * std::sin(theta), rho_dot * std::cos(theta), rho_dot * std::sin(theta);
+    expected << rho * std::cos(theta), rho * std::sin(theta), rho_dot * std::cos(theta),
+        rho_dot * std::sin(theta);
 
     const auto cartesian{Tools::ToCartesian(polar)};
 
