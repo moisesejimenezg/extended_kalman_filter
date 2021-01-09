@@ -71,16 +71,9 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack)
         return;
     }
 
-    /**
-     * Prediction
-     */
-
-    /**
-     * TODO: Update the state transition matrix F according to the new elapsed
-     * time. Time is measured in seconds.
-     * TODO: Update the process noise covariance matrix.
-     * Use noise_ax = 9 and noise_ay = 9 for your Q matrix.
-     */
+    const auto dt{CalculateTimeDifferenceAndUpdatePrevious(measurement_pack)};
+    UpdateStateTransitionFunction(dt);
+    UpdateNoiseCovarianceMatrix(dt);
 
     ekf_.Predict();
 
@@ -122,4 +115,33 @@ void FusionEKF::Initialize(const MeasurementPackage &measurement_pack)
         ekf_.x_ << measurement_pack.raw_measurements_[0], measurement_pack.raw_measurements_[1], 0, 0;
     }
     is_initialized_ = true;
+}
+
+float FusionEKF::CalculateTimeDifferenceAndUpdatePrevious(const MeasurementPackage &measurement_pack)
+{
+    const static auto millisecond_to_second{1e6};
+    const float dt{(previous_timestamp_ - measurement_pack.timestamp_) / millisecond_to_second};
+    previous_timestamp_ = measurement_pack.timestamp_;
+    return dt;
+}
+
+void FusionEKF::UpdateStateTransitionFunction(const float dt)
+{
+    ekf_.F_(0, 2) = dt;
+    ekf_.F_(1, 3) = dt;
+}
+
+void FusionEKF::UpdateNoiseCovarianceMatrix(const float dt)
+{
+    const static auto noise_ax{9.0f};
+    const static auto noise_ay{9.0f};
+    const auto dt_2{dt * dt};
+    const auto dt_3{dt_2 * dt};
+    const auto dt_4{dt_3 * dt};
+    // clang-format off
+    ekf_.Q_ <<  dt_4/4*noise_ax, 0, dt_3/2*noise_ax, 0,
+                0, dt_4/4*noise_ay, 0, dt_3/2*noise_ay,
+                dt_3/2*noise_ax, 0, dt_2*noise_ax, 0,
+                0, dt_3/2*noise_ay, 0, dt_2*noise_ay;
+    // clang-format on
 }
