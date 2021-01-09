@@ -77,23 +77,13 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack)
 
     ekf_.Predict();
 
-    /**
-     * Update
-     */
-
-    /**
-     * TODO:
-     * - Use the sensor type to perform the update step.
-     * - Update the state and covariance matrices.
-     */
-
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR)
     {
         // TODO: Radar updates
     }
     else
     {
-        // TODO: Laser updates
+        ekf_.Update(measurement_pack.raw_measurements_);
     }
 
     // print the output
