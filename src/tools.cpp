@@ -67,4 +67,16 @@ Eigen::VectorXd ToCartesian(const Eigen::VectorXd &polar)
         std::sin(theta) * rho_dot;
     return cartesian;
 }
+
+Eigen::VectorXd ToPolar(const Eigen::VectorXd &cartesian)
+{
+    VectorXd polar{3};
+    const auto px{cartesian[0]};
+    const auto py{cartesian[1]};
+    const auto vx{cartesian[2]};
+    const auto vy{cartesian[3]};
+    const auto sqrtpx2py2{std::sqrt(px * px + py * py)};
+    polar << sqrtpx2py2, std::atan2(py, px), (px * vx + py * vy) / sqrtpx2py2;
+    return polar;
+}
 }  // namespace Tools

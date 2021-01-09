@@ -67,4 +67,17 @@ TEST(Tools, ToCartesian)
 
     EXPECT_TRUE(expected.isApprox(cartesian, 1e-4));
 }
+
+TEST(Tools, ToPolar)
+{
+    const static float pi{std::acos(-1)};
+    Eigen::VectorXd cartesian(4);
+    cartesian << 1, 1, 1, 1;
+    Eigen::VectorXd expected(3);
+    expected << std::sqrt(2), pi/4, 2 / std::sqrt(2);
+
+    const auto polar{Tools::ToPolar(cartesian)};
+
+    EXPECT_TRUE(expected.isApprox(polar, 1e-4));
+}
 }  // namespace
