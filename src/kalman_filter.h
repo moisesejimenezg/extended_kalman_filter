@@ -45,6 +45,9 @@ public:
 
     // measurement covariance matrix
     Eigen::MatrixXd R_;
+
+private:
+    void PerformUpdate(const Eigen::VectorXd &y);
 };
 
 #endif  // KALMAN_FILTER_H_

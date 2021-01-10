@@ -1,5 +1,7 @@
 #include "kalman_filter.h"
 
+#include "tools.h"
+
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 
@@ -29,6 +31,19 @@ void KalmanFilter::Update(const VectorXd &z)
 {
     const VectorXd z_pred{H_ * x_};
     const VectorXd y{z - z_pred};
+    PerformUpdate(y);
+}
+
+void KalmanFilter::UpdateEKF(const VectorXd &z)
+{
+    const VectorXd z_pred{Tools::ToPolar(x_)};
+    const VectorXd y{z - z_pred};
+    H_ = Tools::CalculateJacobian(x_);
+    PerformUpdate(y);
+}
+
+void KalmanFilter::PerformUpdate(const VectorXd &y)
+{
     const MatrixXd Ht{H_.transpose()};
     const MatrixXd S{H_ * P_ * Ht + R_};
     const MatrixXd Si{S.inverse()};
@@ -39,11 +54,4 @@ void KalmanFilter::Update(const VectorXd &z)
     const long x_size{x_.size()};
     const MatrixXd I{MatrixXd::Identity(x_size, x_size)};
     P_ = (I - K * H_) * P_;
-}
-
-void KalmanFilter::UpdateEKF(const VectorXd &z)
-{
-    /**
-     * TODO: update the state by using Extended Kalman Filter equations
-     */
 }
