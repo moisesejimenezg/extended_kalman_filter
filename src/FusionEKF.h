@@ -23,7 +23,7 @@ public:
 private:
     void Initialize(const MeasurementPackage &measurement_pack);
     float CalculateTimeDifferenceAndUpdatePrevious(const MeasurementPackage &measurement_pack);
-    void UpdateStateTransitionFunction(const float dt);
+    void UpdateStateTransitionMatrix(const float dt);
     void UpdateNoiseCovarianceMatrix(const float dt);
 
     bool is_initialized_{false};

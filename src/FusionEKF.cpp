@@ -63,7 +63,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack)
     }
 
     const auto dt{CalculateTimeDifferenceAndUpdatePrevious(measurement_pack)};
-    UpdateStateTransitionFunction(dt);
+    UpdateStateTransitionMatrix(dt);
     UpdateNoiseCovarianceMatrix(dt);
 
     ekf_.Predict();
@@ -107,7 +107,7 @@ float FusionEKF::CalculateTimeDifferenceAndUpdatePrevious(
     return dt;
 }
 
-void FusionEKF::UpdateStateTransitionFunction(const float dt)
+void FusionEKF::UpdateStateTransitionMatrix(const float dt)
 {
     ekf_.F_(0, 2) = dt;
     ekf_.F_(1, 3) = dt;
