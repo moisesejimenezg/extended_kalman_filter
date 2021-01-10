@@ -6,9 +6,9 @@
 class KalmanFilter
 {
 public:
-    KalmanFilter();
+    KalmanFilter() = default;
 
-    virtual ~KalmanFilter();
+    virtual ~KalmanFilter() = default;
 
     /**
      * Init Initializes Kalman filter

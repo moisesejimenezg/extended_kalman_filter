@@ -3,14 +3,13 @@
 #include <cmath>
 #include <iostream>
 
-using Eigen::MatrixXd;
 using Eigen::VectorXd;
-using std::vector;
 namespace Tools
 {
-VectorXd CalculateRMSE(const vector<VectorXd> &estimations, const vector<VectorXd> &ground_truth)
+VectorXd CalculateRMSE(const std::vector<VectorXd> &estimations,
+                       const std::vector<VectorXd> &ground_truth)
 {
-    VectorXd rmse(4);
+    VectorXd rmse{4};
     rmse << 0, 0, 0, 0;
     if (estimations.size() != ground_truth.size() || estimations.size() == 0)
     {
@@ -20,7 +19,7 @@ VectorXd CalculateRMSE(const vector<VectorXd> &estimations, const vector<VectorX
 
     for (unsigned int i = 0; i < estimations.size(); ++i)
     {
-        VectorXd residual = estimations[i] - ground_truth[i];
+        VectorXd residual{estimations[i] - ground_truth[i]};
         residual = residual.array() * residual.array();
         rmse += residual;
     }
@@ -30,17 +29,17 @@ VectorXd CalculateRMSE(const vector<VectorXd> &estimations, const vector<VectorX
     return rmse;
 }
 
-MatrixXd CalculateJacobian(const VectorXd &x_state)
+Eigen::MatrixXd CalculateJacobian(const VectorXd &x_state)
 {
-    MatrixXd Hj(3, 4);
-    float px = x_state(0);
-    float py = x_state(1);
-    float vx = x_state(2);
-    float vy = x_state(3);
+    Eigen::MatrixXd Hj{3, 4};
+    double px{x_state(0)};
+    double py{x_state(1)};
+    double vx{x_state(2)};
+    double vy{x_state(3)};
 
-    float c1 = px * px + py * py;
-    float c2 = sqrt(c1);
-    float c3 = (c1 * c2);
+    auto c1{px * px + py * py};
+    auto c2{sqrt(c1)};
+    auto c3{(c1 * c2)};
 
     if (fabs(c1) < 0.0001)
     {

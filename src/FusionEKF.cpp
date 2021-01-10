@@ -5,26 +5,20 @@
 #include "Eigen/Dense"
 #include "tools.h"
 
-using Eigen::MatrixXd;
-using Eigen::VectorXd;
-using std::cout;
-using std::endl;
-using std::vector;
-
 FusionEKF::FusionEKF()
 {
     is_initialized_ = false;
 
     previous_timestamp_ = 0;
 
-    R_laser_ = MatrixXd(2, 2);
-    R_radar_ = MatrixXd(3, 3);
-    H_laser_ = MatrixXd(2, 4);
+    R_laser_ = Eigen::MatrixXd(2, 2);
+    R_radar_ = Eigen::MatrixXd(3, 3);
+    H_laser_ = Eigen::MatrixXd(2, 4);
     // clang-format off
     H_laser_ << 1, 0, 0, 0,
                 0, 1, 0, 0;
     // clang-format on
-    Hj_ = MatrixXd(3, 4);
+    Hj_ = Eigen::MatrixXd(3, 4);
 
     // clang-format off
     R_laser_ << 0.0225, 0,
@@ -52,8 +46,6 @@ FusionEKF::FusionEKF()
     ekf_.Init(x, P, F, H_laser_, R_laser_, Q);
 }
 
-FusionEKF::~FusionEKF() {}
-
 void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack)
 {
     if (!is_initialized_)
@@ -80,13 +72,13 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack)
         ekf_.Update(measurement_pack.raw_measurements_);
     }
 
-    cout << "x_ = " << ekf_.x_ << endl;
-    cout << "P_ = " << ekf_.P_ << endl;
+    std::cout << "x_ = " << ekf_.x_ << std::endl;
+    std::cout << "P_ = " << ekf_.P_ << std::endl;
 }
 
 void FusionEKF::Initialize(const MeasurementPackage &measurement_pack)
 {
-    ekf_.x_ = VectorXd(4);
+    ekf_.x_ = Eigen::VectorXd(4);
     previous_timestamp_ = measurement_pack.timestamp_;
 
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR)
@@ -112,13 +104,13 @@ float FusionEKF::CalculateTimeDifferenceAndUpdatePrevious(
     return dt;
 }
 
-void FusionEKF::UpdateStateTransitionMatrix(const float dt)
+void FusionEKF::UpdateStateTransitionMatrix(const float &dt)
 {
     ekf_.F_(0, 2) = dt;
     ekf_.F_(1, 3) = dt;
 }
 
-void FusionEKF::UpdateNoiseCovarianceMatrix(const float dt)
+void FusionEKF::UpdateNoiseCovarianceMatrix(const float &dt)
 {
     const static auto noise_ax{9.0f};
     const static auto noise_ay{9.0f};

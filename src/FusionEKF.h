@@ -14,7 +14,7 @@ class FusionEKF
 public:
     FusionEKF();
 
-    virtual ~FusionEKF();
+    virtual ~FusionEKF() = default;
 
     void ProcessMeasurement(const MeasurementPackage &measurement_pack);
 
@@ -23,8 +23,8 @@ public:
 private:
     void Initialize(const MeasurementPackage &measurement_pack);
     float CalculateTimeDifferenceAndUpdatePrevious(const MeasurementPackage &measurement_pack);
-    void UpdateStateTransitionMatrix(const float dt);
-    void UpdateNoiseCovarianceMatrix(const float dt);
+    void UpdateStateTransitionMatrix(const float &dt);
+    void UpdateNoiseCovarianceMatrix(const float &dt);
 
     bool is_initialized_{false};
 
