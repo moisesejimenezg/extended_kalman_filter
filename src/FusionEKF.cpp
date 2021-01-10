@@ -106,7 +106,7 @@ void FusionEKF::Initialize(const MeasurementPackage &measurement_pack)
 float FusionEKF::CalculateTimeDifferenceAndUpdatePrevious(
     const MeasurementPackage &measurement_pack)
 {
-    const static auto millisecond_to_second{1e6};
+    const static float millisecond_to_second{1e6};
     const float dt{(measurement_pack.timestamp_ - previous_timestamp_) / millisecond_to_second};
     previous_timestamp_ = measurement_pack.timestamp_;
     return dt;

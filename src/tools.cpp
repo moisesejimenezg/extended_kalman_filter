@@ -58,7 +58,6 @@ MatrixXd CalculateJacobian(const VectorXd &x_state)
 
 Eigen::VectorXd ToCartesian(const Eigen::VectorXd &polar)
 {
-    // TODO: Angles must be between -pi and pi
     VectorXd cartesian{4};
     const auto rho{polar[0]};
     const auto theta{polar[1]};
@@ -75,8 +74,8 @@ Eigen::VectorXd ToPolar(const Eigen::VectorXd &cartesian)
     const auto py{cartesian[1]};
     const auto vx{cartesian[2]};
     const auto vy{cartesian[3]};
-    const auto sqrtpx2py2{std::sqrt(px * px + py * py)};
-    polar << sqrtpx2py2, std::atan2(py, px), (px * vx + py * vy) / sqrtpx2py2;
+    const auto distance{std::sqrt(px * px + py * py)};
+    polar << distance, std::atan2(py, px), (px * vx + py * vy) / distance;
     return polar;
 }
 }  // namespace Tools

@@ -1,5 +1,6 @@
 #include "kalman_filter.h"
 
+#include <cmath>
 #include "tools.h"
 
 using Eigen::MatrixXd;
@@ -37,7 +38,15 @@ void KalmanFilter::Update(const VectorXd &z)
 void KalmanFilter::UpdateEKF(const VectorXd &z)
 {
     const VectorXd z_pred{Tools::ToPolar(x_)};
-    const VectorXd y{z - z_pred};
+    VectorXd y{z - z_pred};
+    if (y(1) < -M_PI)
+    {
+        y(1) += 2*M_PI;
+    }
+    else if (y(1) > M_PI)
+    {
+        y(1) -= 2*M_PI;
+    }
     H_ = Tools::CalculateJacobian(x_);
     PerformUpdate(y);
 }
