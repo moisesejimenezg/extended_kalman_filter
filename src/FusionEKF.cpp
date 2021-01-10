@@ -89,6 +89,8 @@ void FusionEKF::Initialize(const MeasurementPackage &measurement_pack)
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR)
     {
         ekf_.x_ << Tools::ToCartesian(measurement_pack.raw_measurements_);
+        ekf_.x_(2) = 0;
+        ekf_.x_(3) = 0;
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER)
     {
@@ -102,7 +104,7 @@ float FusionEKF::CalculateTimeDifferenceAndUpdatePrevious(
     const MeasurementPackage &measurement_pack)
 {
     const static auto millisecond_to_second{1e6};
-    const float dt{(previous_timestamp_ - measurement_pack.timestamp_) / millisecond_to_second};
+    const float dt{(measurement_pack.timestamp_ - previous_timestamp_) / millisecond_to_second};
     previous_timestamp_ = measurement_pack.timestamp_;
     return dt;
 }
