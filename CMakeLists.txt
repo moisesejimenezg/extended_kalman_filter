@@ -2,7 +2,7 @@ project(ExtendedKF)
 
 cmake_minimum_required (VERSION 3.5)
 
-add_definitions(-std=c++14)
+add_definitions(-std=c++11)
 
 set(CXX_FLAGS "-Wall")
 set(CMAKE_CXX_FLAGS "${CXX_FLAGS}")
@@ -27,11 +27,11 @@ add_executable(ExtendedKF ${main} ${sources})
 
 target_link_libraries(ExtendedKF z ssl uv uWS)
 
-add_subdirectory(third_party/googletest)
-enable_testing()
-include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+#add_subdirectory(third_party/googletest)
+#enable_testing()
+#include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
-include_directories(src)
-add_executable(Unit ${test_sources} ${sources})
-target_link_libraries(Unit z ssl uv uWS gtest gtest_main)
-add_test(Unit Unit)
+#include_directories(src)
+#add_executable(Unit ${test_sources} ${sources})
+#target_link_libraries(Unit z ssl uv uWS gtest gtest_main)
+#add_test(Unit Unit)
